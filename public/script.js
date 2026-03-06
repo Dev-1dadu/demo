@@ -13,70 +13,33 @@ const age = document.getElementById("age").value
 
 try{
 
-const res = await fetch(API_URL + "/saveUser", {
+const res = await fetch(API_URL + "/saveUser",{
 
-method: "POST",
-headers: {
-"Content-Type": "application/json"
+method:"POST",
+headers:{
+"Content-Type":"application/json"
 },
 
-body: JSON.stringify({ name, email, age })
+body:JSON.stringify({name,email,age})
 
 })
 
 const data = await res.json()
 
 message.innerText = data.message
+message.classList.add("show")
 
 form.reset()
 
-loadUsers()
+setTimeout(()=>{
+message.classList.remove("show")
+},3000)
 
-}catch(err){
+}catch(error){
 
-message.innerText = "Error saving user"
+message.innerText="Error saving user"
+message.classList.add("show")
 
 }
 
 })
-
-
-async function loadUsers(){
-
-const res = await fetch(API_URL + "/users")
-
-const users = await res.json()
-
-const table = document.querySelector("#userTable tbody")
-
-table.innerHTML = ""
-
-users.forEach(user => {
-
-table.innerHTML += `
-<tr>
-<td>${user.name}</td>
-<td>${user.email}</td>
-<td>${user.age}</td>
-<td>
-<button onclick="deleteUser('${user._id}')">Delete</button>
-</td>
-</tr>
-`
-
-})
-
-}
-
-
-async function deleteUser(id){
-
-await fetch(API_URL + "/deleteUser/" + id, {
-method: "DELETE"
-})
-
-loadUsers()
-
-}
-
-loadUsers()
